@@ -6,15 +6,15 @@ const Item = ({ text, onDelete }) => {
     return (
         <li
             className="list-group-item d-flex justify-content-between align-items-center"
-            onMouseEnter={() => setHovered(true)}
-            onMouseLeave={() => setHovered(false)}
+            onMouseOver={() => setHovered(true)}
+            onMouseOut={() => setHovered(false)}
         >
             {text}
-            {hovered && (
-                <button className="btn btn-sm btn-danger " onClick={onDelete}>
-                    &times;
-                </button>
-            )}
+            <span>
+                {hovered ? (
+                    <button className="btn"onClick={onDelete}> ❌ </button>
+                ) : null}
+            </span>
         </li>
     );
 };
