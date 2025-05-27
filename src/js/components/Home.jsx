@@ -32,10 +32,10 @@ const Home = () => {
 
 			<ListGroup tasks={tasks} onDelete={deleteTask} />
 			{tasks.length === 0 ? (
-				<div className="alert">No hay tareas!<br />Añade tareas...</div>
+				<div className="alert">There are no tasks!<br />Add new tasks...</div>
 			) : (
 				<div className="text-muted mt-3">
-					{tasks.length} {tasks.length === 1 ? "tarea" : "tareas"}
+					{tasks.length} {tasks.length === 1 ? "task" : "tasks"}
 				</div>
 			)}
 		</div>
