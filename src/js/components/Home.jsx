@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import ListGroup from "./ListGroup";
 
@@ -6,10 +6,28 @@ const Home = () => {
 	const [task, setTask] = useState("");
 	const [tasks, setTasks] = useState([]);
 
+	useEffect(() => {
+		ObtenerListaTareas();
+	}, []);
+
+	const ObtenerListaTareas = () => {
+		const URL = "https://playground.4geeks.com/todo/users/GuillerMorales";
+
+		fetch(URL)
+			.then((response) => response.json())
+			.then((data) => {
+				setTasks(data.todos.map(item => item.label));
+				console.log("Tareas obtenidas:", data.todos);
+			})
+			.catch((error) => {
+				console.error("Error al obtener las tareas:", error);
+			});
+	};
+
 	const handleKeyPress = (e) => {
 		if (e.key === "Enter" && task.trim() !== "") {
 			setTasks([...tasks, task.trim()]);
-			setTask(""); 
+			setTask("");
 		}
 	};
 
@@ -31,6 +49,7 @@ const Home = () => {
 			/>
 
 			<ListGroup tasks={tasks} onDelete={deleteTask} />
+
 			{tasks.length === 0 ? (
 				<div className="alert">There are no tasks!<br />Add new tasks...</div>
 			) : (
@@ -38,6 +57,7 @@ const Home = () => {
 					{tasks.length} {tasks.length === 1 ? "task" : "tasks"}
 				</div>
 			)}
+
 		</div>
 	);
 };
