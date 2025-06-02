@@ -3,9 +3,10 @@ import Item from "./Item";
 
 const ListGroup = ({ tasks, onDelete }) => (
 	<ul className="list-group">
-		{tasks.map((task, index) => (
-			<Item key={index} text={task} onDelete={() => onDelete(index)} />
+		{tasks.map((task) => (
+			<Item key={task.id} text={task.label} onDelete={() => onDelete(task.id)} />
 		))}
 	</ul>
 );
-export default ListGroup;
+
+export default ListGroup

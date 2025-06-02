@@ -7,16 +7,16 @@ const Home = () => {
 	const [tasks, setTasks] = useState([]);
 
 	useEffect(() => {
-		ObtenerListaTareas();
+		obtenerListaTareas();
 	}, []);
 
-	const ObtenerListaTareas = () => {
+	const obtenerListaTareas = () => {
 		const URL = "https://playground.4geeks.com/todo/users/GuillerMorales";
 
 		fetch(URL)
 			.then((response) => response.json())
 			.then((data) => {
-				setTasks(data.todos.map(item => item.label));
+				setTasks(data.todos); // Guardamos objetos completos
 				console.log("Tareas obtenidas:", data.todos);
 			})
 			.catch((error) => {
@@ -26,13 +26,44 @@ const Home = () => {
 
 	const handleKeyPress = (e) => {
 		if (e.key === "Enter" && task.trim() !== "") {
-			setTasks([...tasks, task.trim()]);
-			setTask("");
+			const nuevaTarea = {
+				label: task.trim(),
+				done: false
+			};
+
+			fetch("https://playground.4geeks.com/todo/todos/GuillerMorales", {
+				method: "POST",
+				body: JSON.stringify(nuevaTarea),
+				headers: {
+					"Content-Type": "application/json"
+				}
+			})
+				.then(resp => {
+					if (!resp.ok) throw new Error("Error al crear la tarea");
+					return resp.json();
+				})
+				.then(data => {
+					console.log("Tarea creada:", data);
+					obtenerListaTareas();
+					setTask("");
+				})
+				.catch(error => {
+					console.error("Error en la petición POST:", error);
+				});
 		}
 	};
 
-	const deleteTask = (indexToDelete) => {
-		setTasks(tasks.filter((_, index) => index !== indexToDelete));
+	const deleteTask = (id) => {
+		fetch(`https://playground.4geeks.com/todo/todos/${id}`, {
+			method: "DELETE",
+		})
+			.then(() => {
+				console.log("Tarea eliminada");
+				obtenerListaTareas();
+			})
+			.catch(error => {
+				console.log("Error al eliminar la Tarea:", error);
+			});
 	};
 
 	return (
@@ -57,7 +88,6 @@ const Home = () => {
 					{tasks.length} {tasks.length === 1 ? "task" : "tasks"}
 				</div>
 			)}
-
 		</div>
 	);
 };
